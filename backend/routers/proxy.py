@@ -164,6 +164,18 @@ async def proxy_tiff_pages(
                                 / (array.max() - array.min())
                             )
                             img = Image.fromarray(normalized.astype(np.uint8))
+                        if img.mode == "F":
+                            array = np.array(img)
+                            # Shift all values so that smallest value is zero
+                            array -= array.min()
+                            # Distribute floating point values between min and max of `uint8`
+                            # (0 and 255), based on the range of the floating point values in
+                            # the array
+                            scale_factor = np.iinfo(np.uint8).max / (
+                                array.max() - array.min()
+                            )
+                            array *= scale_factor
+                            img = Image.fromarray(array)
                         img = img.convert("RGB")
 
                     # Save as PNG to BytesIO
