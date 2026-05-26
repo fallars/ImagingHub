@@ -112,12 +112,7 @@ export const proxyService = {
     );
 
     // Convert ArrayBuffer to base64 data URL instead of blob URL
-    const base64 = btoa(
-      new Uint8Array(response.data).reduce(
-        (data, byte) => data + String.fromCharCode(byte),
-        ""
-      )
-    );
+    const base64 = new Uint8Array(response.data).toBase64();
 
     return `data:image/png;base64,${base64}`;
   },
